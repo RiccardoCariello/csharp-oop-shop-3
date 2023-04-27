@@ -13,13 +13,13 @@ namespace C__Shop_3
         {
             //ATTRIBUTI
 
-            private float liters;
+            private double liters;
             private float ph;
             private string source;
-
+            public static double ACQUA_GALLONI = 3.785;
 
             //PROPERTY
-            public float Liters
+            public double Liters
             {
                 get
                 {
@@ -59,10 +59,24 @@ namespace C__Shop_3
 
 
             //COSTRUTTORE
-            public Acqua(string name, string description, float price, float liters, float ph, string source, int iva = 22) : base(name, description, price, iva)
+            public Acqua(string name, string description, float price, double liters, float ph, string source, int iva = 22) : base(name, description, price, iva)
             {
-                this.Liters = liters;
+                if (liters > 1.5 || liters < 0) 
+                { throw new Exception("Una bottiglia d'acqua non può avere più di 1.5 litri nè meno di 0"); }
+                else
+                {
+                    this.Liters = liters;
+                }
+                
+                if(ph > 10 || ph<0)
+                {
+                    throw new Exception("\nIl ph non può essere nè negativo n'è maggiore di 10\n");
+                }else {
                 this.ph = ph;
+                }
+            
+            
+                
                 this.source = source;
 
             }
@@ -70,27 +84,36 @@ namespace C__Shop_3
 
             //metodiniii
 
-            public void Drink(float litersToDrink)
+            public void Drink(double litersToDrink)
             {
                 if (litersToDrink > this.liters)
                 {
-                    this.liters = 0;
+
+                throw new Exception("Non puoi bere più acqua di quanta ce n'è nella bottiglia");
                 }
-                else if (litersToDrink > 0 && litersToDrink <= 1.5f)
+                else if (litersToDrink > 0 && litersToDrink <= this.liters)
                 {
                     this.liters = this.liters - litersToDrink;
                 }
             }
 
-            public void Fill(float liters)
+            public void Fill(double liters)
             {
 
                 if ((liters > 0) && (liters <= 1.5f))
                 {
-                    this.liters = this.liters + liters;
+                   this.liters = this.liters + liters;
+                }else 
+                {
+                    throw new Exception("L'acqua che stai cercando di inserire è troppa o troppo poca");
                 }
 
-                if (this.liters > 1.5f) { this.liters = 1.5f; }
+                if (this.liters > 1.5f ) 
+                { 
+                    //this.liters = 1.5f;
+                    //Console.WriteLine("Un po' di acqua è andata sprecata :(");
+                    throw new Exception("L'acqua che stai cercando di inserire è più della capienza massima della bottiglia");
+                }
             }
 
             public void Empty() { this.liters = 0; }
@@ -107,7 +130,12 @@ namespace C__Shop_3
 
             }
 
-
+        public static double ConvertToGallon(double liters)
+        {
+            double gallons;
+            gallons = liters * ACQUA_GALLONI;
+            return gallons;
+        }
 
         }
     }
